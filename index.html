@@ -122,13 +122,13 @@
       </h1>
     </div>
     <!-- ************************************* Publicidad *************************************-->
-
     <div id="app" v-cloak>
       <div class="d-flex flex-column tablero">
         <div
           v-for="(item, index) in items"
-          :key="item.player"
+          :key="index"
           class="info-jugador d-flex flex-row"
+          :style="rowJugadorHeight"
           v-bind:class="{ tirador: values.jugadorlanza !== '' && index == values.jugadorlanza }"
           v-bind:data-jugador="item.player"
         >
@@ -145,8 +145,8 @@
                 <p>{{ item.primero.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.primero.score }}</p>
+            <div class="puntos">
+              <p>{{ item.primero.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -158,8 +158,8 @@
                 <p>{{ item.segundo.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.segundo.score }}</p>
+            <div class="puntos">
+              <p>{{ item.segundo.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -171,8 +171,8 @@
                 <p>{{ item.tercero.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.tercero.score }}</p>
+            <div class="puntos">
+              <p>{{ item.tercero.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -184,8 +184,8 @@
                 <p>{{ item.cuarto.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.cuarto.score }}</p>
+            <div class="puntos">
+              <p>{{ item.cuarto.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -197,8 +197,8 @@
                 <p>{{ item.quinto.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.quinto.score }}</p>
+            <div class="puntos">
+              <p>{{ item.quinto.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -210,8 +210,8 @@
                 <p>{{ item.sexto.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.sexto.score }}</p>
+            <div class="puntos">
+              <p>{{ item.sexto.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -223,8 +223,8 @@
                 <p>{{ item.septimo.second}}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.septimo.score }}</p>
+            <div class="puntos">
+              <p>{{ item.septimo.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -233,11 +233,11 @@
                 <p>{{ item.octavo.first }}</p>
               </div>
               <div class="tiro segundo">
-                <p>{{ item.octavo.second}}</p>
+                <p>{{ item.octavo.second }}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.octavo.score }}</p>
+            <div class="puntos">
+              <p>{{ item.octavo.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -246,11 +246,11 @@
                 <p>{{ item.noveno.first }}</p>
               </div>
               <div class="tiro segundo">
-                <p>{{ item.noveno.second}}</p>
+                <p>{{ item.noveno.second }}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.noveno.score }}</p>
+            <div class="puntos">
+              <p>{{ item.noveno.score }}</p>
             </div>
           </div>
           <div class="puntaje parcial">
@@ -259,14 +259,14 @@
                 <p>{{ item.decimo.first }}</p>
               </div>
               <div class="tres tiro segundo">
-                <p>{{ item.decimo.second}}</p>
+                <p>{{ item.decimo.second }}</p>
               </div>
               <div class="tres tiro tercero">
-                <p>{{ item.decimo.third}}</p>
+                <p>{{ item.decimo.third }}</p>
               </div>
             </div>
-            <div>
-              <p class="puntos">{{ item.decimo.score }}</p>
+            <div class="puntos">
+              <p>{{ item.decimo.score }}</p>
             </div>
           </div>
           <div class="puntaje final align-self-center">
@@ -279,9 +279,7 @@
 
       <!-- ************************************* BOTONERA ************************************* -->
       <div class="d-flex">
-        <div class="m-3">
-          <label>Animaciones</label>
-        </div>
+        <label>Animaciones</label>
         <div class="m-2">
           <b-button @click="animacionStrike" variant="success">
             Strike!
@@ -314,10 +312,7 @@
         </div>
       </div>
       <div class="d-flex">
-        <div class="m-3">
-          <label>Pinos</label>
-        </div>
-
+        <label>Juego</label>
         <b-button @click="pinos" variant="success">
           {{ divPinosOculto ? 'Ver pinos' : 'Ocultar pinos'}}
         </b-button>
@@ -342,7 +337,7 @@
 
       <div class="d-flex flex-row justify-content-center">
         <div class="m-2">
-          <select class="form-control mb-2" v-model="debugJugadores">
+          <select class="form-control" v-model="debugJugadores">
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -391,10 +386,6 @@
           <div class="d-flex flex-row flex-wrap">
             <div v-for="(item, index) in items" :key="index" class="m-2">
               <select v-model="debugPuntos[index]" class="form-control">
-                <option disabled selected
-                  >Puntos para el jugador {{ item.player !== '' ? item.player :
-                  index + 1 }}</option
-                >
                 <option value="0"
                   >0 (este valor se representa como 0 después del
                   disparo)</option
@@ -430,11 +421,14 @@
           :src="gifs.strike.src"
           muted="muted"
           preload="auto"
+          type="video/webm"
         ></video>
         <!--<img id="strikeVideo" src="" />-->
       </div>
       <div id="strikeWord" class="hide animacion strike">
-        <div class="d-flex justify-content-center">
+        <div
+          class="d-flex justify-content-center align-items-center img-container"
+        >
           <img class="hide" src="./images/comic-boom.png" />
         </div>
         <h1>STRIKE!!</h1>
@@ -446,11 +440,14 @@
           :src="gifs.spare.src"
           muted="muted"
           preload="auto"
+          type="video/webm"
         ></video>
         <!--<img id="spareVideo" src="" />-->
       </div>
       <div id="spareWord" class="hide animacion spare">
-        <div class="d-flex justify-content-center">
+        <div
+          class="d-flex justify-content-center align-items-center img-container"
+        >
           <img class="hide" src="./images/comic-boom.png" />
         </div>
         <h1>SPARE!</h1>
@@ -462,6 +459,7 @@
           :src="gifs.finish.src"
           muted="muted"
           preload="auto"
+          type="video/webm"
         ></video>
         <!--<img id="finishVideo" src="./images/finish.gif" />-->
       </div>
@@ -478,6 +476,7 @@
           :src="gifs.bolaFuera.src"
           muted="muted"
           preload="auto"
+          type="video/webm"
         ></video>
         <!--<img id="bolaFueraVideo" src="" />-->
       </div>
@@ -491,6 +490,7 @@
           :src="gifs.espera.src"
           muted="muted"
           preload="auto"
+          type="video/webm"
         ></video>
         <!--<img id="esperaVideo" src="" />-->
       </div>
@@ -504,6 +504,7 @@
           :src="gifs.tirar.src"
           muted="muted"
           preload="auto"
+          type="video/webm"
         ></video>
         <!--<img id="tirarVideo" src="" />-->
       </div>
